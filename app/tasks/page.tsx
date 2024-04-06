@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import React from 'react'
 import Task from '../components/task/task';
@@ -11,16 +11,23 @@ const TasksPage = async () => {
 const [filter, setFilter] = React.useState("all");
 const [tasks, setTasks] = React.useState<ITask[]>([]);
 
-const response = await fetch('http://localhost:3000/api/tasks');
-const data = await response.json();
-setTasks(data);
+
+const getTasks = () => {
+  fetch("http://localhost:3000/api/tasks")
+    .then((res) => res.json())
+    .then((tasks) => setTasks(tasks));
+};
+
+React.useEffect(() => {
+  getTasks();
+}, []);
 
 const editCompleted = (id: number) => {
   const issue = tasks.find((item) => item.id === id);
 
   if (!issue) return;
 
-  fetch(`http://localhost:3000/api/issues/${id}`, {
+  fetch(`http://localhost:3000/api/tasks/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -65,7 +72,7 @@ const filteredTasks: ITask[]  = React.useMemo(() => {
     <div className="flex flex-col gap-4">
     {filteredTasks.map((item: ITask) => (
       <Task
-        key={item.id + item.title + item.description}
+        key={item.id}
         item={item}
         editCompleted={editCompleted}
       />
