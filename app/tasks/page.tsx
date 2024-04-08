@@ -6,7 +6,7 @@ import Filter from '../components/filter/filter';
 import Link from 'next/link';
 import { ITask } from '../validation-schemas';
 
-const TasksPage = async () => {
+const TasksPage =  () => {
 
 const [filter, setFilter] = React.useState("all");
 const [tasks, setTasks] = React.useState<ITask[]>([]);
@@ -22,30 +22,23 @@ React.useEffect(() => {
   getTasks();
 }, []);
 
-const editCompleted = (id: number) => {
-  const issue = tasks.find((item) => item.id === id);
-
-  if (!issue) return;
-
+const editCompleted = (id: number, completed: boolean) => {
   fetch(`http://localhost:3000/api/tasks/${id}`, {
-    method: "PATCH",
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      completed: !issue.completed,
-      title: issue.title,
-      description: issue.description,
-    }),
-  }).then(() => {
-    const index = tasks.findIndex((item) => item.id === id);
-    const newTasks = [...tasks];
-    newTasks[index].completed = !newTasks[index].completed;
-    setTasks(newTasks);
+    body: JSON.stringify({ completed }),
+  })
+
+  const newTasks = tasks.map((item) => {
+    if (item.id === id) {
+      return { ...item, completed };
+    }
+    return item;
   });
+  setTasks(newTasks);
 };
-
-
 
 const filteredTasks: ITask[]  = React.useMemo(() => {
   if (filter === "all") {
@@ -61,15 +54,13 @@ const filteredTasks: ITask[]  = React.useMemo(() => {
 
 
   return (
-    <div>
-    <div className="flex gap-4 justify-between border-y border-neutral-700 py-4 items-center my-6">
+    <>
+    <div className="flex gap-4 w-full justify-between border-y border-neutral-700 py-4 px-4 items-center my-6">
       <Filter filter={filter} setFilter={setFilter} />
-      <Link className="btn btn-outline btn-md" href="/issues/new">
-        Добавить задачу
-      </Link>
+      <Link href="/tasks/new" className="btn w-96 btn-primary">New Task</Link>
     </div>
 
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-3/4 mx-auto" >
     {filteredTasks.map((item: ITask) => (
       <Task
         key={item.id}
@@ -78,8 +69,8 @@ const filteredTasks: ITask[]  = React.useMemo(() => {
       />
     ))}
     </div>
-  </div>
-  );
+  </>
+  )
 }
 
 export default TasksPage;

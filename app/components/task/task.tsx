@@ -9,7 +9,7 @@ interface IProps {
 
 const Task = ({ item, editCompleted }: IProps ) => {
   return (
-    <div key={item.id} className="card w-96 gap-2 bg-base-200 p-4 shadow-xl">
+    <div key={item.id} className="card w- gap-2 bg-base-200 p-4 shadow-xl">
       <Checkbox
         id={item.id}
         completed={item.completed}

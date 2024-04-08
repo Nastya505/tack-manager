@@ -32,3 +32,8 @@ export async function POST(request: NextRequest) {
   return NextResponse.json(newTask, { status: 201 });
 }
 
+
+export function PUT(request: NextRequest) {
+  const body = request.json();
+  return NextResponse.json(body);
+}

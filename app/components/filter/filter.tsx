@@ -10,17 +10,14 @@ const Filter = ({ filter, setFilter }: IProps) => {
     {
       name: "all",
       text: "Все",
-      color: "bg-blue-500",
     },
     {
       name: "completed",
       text: "Выполненные",
-      color: "bg-green-500",
     },
     {
       name: "uncompleted",
       text: "Невыполненные",
-      color: "bg-red-500",
     },
   ];
 
@@ -33,7 +30,7 @@ const Filter = ({ filter, setFilter }: IProps) => {
             <input
               type="radio"
               name="filter_task"
-              className={`radio checked:${item.color}`}
+              className={`radio checked:bg-black-500`}
               defaultChecked={filter === item.name}
               onChange={() => setFilter(item.name)}
             />
